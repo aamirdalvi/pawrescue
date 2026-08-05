@@ -9,6 +9,7 @@ import { Check } from "lucide-react";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import Container from "@/components/ui/Container";
+import Breadcrumb from "@/components/ui/Breadcrumb";
 import Button from "@/components/ui/Button";
 import SectionTitle from "@/components/ui/SectionTitle";
 import LivePreviewCard from "@/components/cards/LivePreviewCard";
@@ -33,60 +34,116 @@ const steps = [
   "Review",
 ];
 
+const DRAFT_STORAGE_KEY = "pawrescue_add_listing_draft";
+
 export default function AddListingPage() {
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState(1);
-  const [isPublishing, setIsPublishing] = useState(false);
-  const [isPreviewExpanded, setIsPreviewExpanded] = useState(false);
-
-  // Ref for active step button to center auto-scroll on mobile
-  const activeStepRef = useRef<HTMLButtonElement | null>(null);
-
-  // Elevated media states
   const [images, setImages] = useState<string[]>([]);
   const [video, setVideo] = useState<string | null>(null);
+  const [isPublishing, setIsPublishing] = useState(false);
+  const activeStepRef = useRef<HTMLDivElement>(null);
 
   const {
     register,
     handleSubmit,
     trigger,
-    getValues,
     control,
-    formState: { errors },
+    setValue,
+    getValues,
+    watch,
+    reset,
+    formState: { errors, isDirty },
   } = useForm<FormInputs>({
+    mode: "onBlur",
     defaultValues: {
-      title: "",
-      listingType: "",
-      description: "",
-      petName: "",
-      species: "",
-      breed: "",
-      gender: "",
-      age: "",
-      color: "",
-      height: "",
-      weight: "",
-      country: "",
-      state: "",
-      city: "",
-      area: "",
-      address: "",
-      pincode: "",
-      ownerName: "",
-      phone: "",
-      email: "",
-      preferredContact: "",
-      vaccinated: false,
+      listingType: "adopt",
+      species: "Dog",
+      gender: "Male",
+      color: "Brown",
+      vaccinated: true,
       sterilized: false,
-      images: [],
-      videos: [],
+      microchipped: false,
+      specialNeeds: false,
+      friendlyChildren: true,
+      friendlyDogs: true,
+      friendlyCats: false,
+      preferredContact: "phone",
+      country: "India",
     },
   });
 
-  // Watch form fields in real-time
   const watchedValues = useWatch({ control });
 
-  // Scroll active step into view on mobile snap-scroll stepper
+  // 1. Restore draft on mount if available
+  useEffect(() => {
+    try {
+      const savedDraft = localStorage.getItem(DRAFT_STORAGE_KEY);
+      if (savedDraft) {
+        const parsed = JSON.parse(savedDraft);
+        if (parsed.formData) {
+          reset(parsed.formData);
+        }
+        if (parsed.images) {
+          setImages(parsed.images);
+        }
+        if (parsed.video) {
+          setVideo(parsed.video);
+        }
+        toast((t) => (
+          <div className="flex items-center gap-3">
+            <span className="text-xs font-bold">Draft restored from your last session.</span>
+            <button
+              onClick={() => {
+                localStorage.removeItem(DRAFT_STORAGE_KEY);
+                toast.dismiss(t.id);
+                toast.success("Draft cleared.");
+              }}
+              className="text-[10px] font-black text-red-600 underline cursor-pointer"
+            >
+              Clear Draft
+            </button>
+          </div>
+        ), { duration: 6000 });
+      }
+    } catch (err) {
+      console.error("Failed to restore draft:", err);
+    }
+  }, [reset]);
+
+  // 2. Autosave draft to localStorage on changes
+  useEffect(() => {
+    if (isDirty || images.length > 0) {
+      const timeoutId = setTimeout(() => {
+        try {
+          const draftPayload = {
+            formData: getValues(),
+            images,
+            video,
+          };
+          localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(draftPayload));
+        } catch (err) {
+          console.error("Autosave draft error:", err);
+        }
+      }, 1000);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [watchedValues, images, video, isDirty, getValues]);
+
+  // 3. Warn before leaving page if unsaved changes exist
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isDirty || images.length > 0) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [isDirty, images]);
+
+  // Scroll active stepper item into view on mobile
   useEffect(() => {
     if (activeStepRef.current) {
       activeStepRef.current.scrollIntoView({
@@ -97,45 +154,63 @@ export default function AddListingPage() {
     }
   }, [currentStep]);
 
-  // Target specific fields to validate on each step transition
-  const getStepFields = (step: number): (keyof FormInputs)[] => {
-    switch (step) {
-      case 1:
-        return ["title", "listingType", "description"];
-      case 2:
-        return ["petName", "species", "breed", "gender", "age", "color"];
-      case 3:
-        return ["vaccinated", "sterilized", "medicalNotes"];
-      case 4:
-        return ["country", "state", "city", "area", "address", "pincode"];
-      case 5:
-        return ["images", "videos"];
-      case 6:
-        return ["ownerName", "phone", "email", "preferredContact"];
-      default:
-        return [];
-    }
-  };
-
+  // Validate step fields before advancing
   const handleNext = async () => {
-    const fieldsToValidate = getStepFields(currentStep);
-    // Trigger validation for only the current step's fields
-    const isStepValid = await trigger(fieldsToValidate);
+    let fieldsToValidate: (keyof FormInputs)[] = [];
 
-    if (isStepValid) {
-      setCurrentStep((prev) => Math.min(prev + 1, steps.length));
-    } else {
-      toast.error("Please fill in all required fields correctly.");
+    switch (currentStep) {
+      case 1:
+        fieldsToValidate = ["title", "listingType", "species", "breed"];
+        break;
+      case 2:
+        fieldsToValidate = ["age", "color", "description"];
+        break;
+      case 3:
+        fieldsToValidate = [];
+        break;
+      case 4:
+        fieldsToValidate = ["state", "city"];
+        break;
+      case 5:
+        if (images.length === 0) {
+          toast.error("Please upload at least 1 image of the pet.");
+          return;
+        }
+        break;
+      case 6:
+        fieldsToValidate = ["ownerName", "phone"];
+        break;
+    }
+
+    if (fieldsToValidate.length > 0) {
+      const isValid = await trigger(fieldsToValidate);
+      if (!isValid) {
+        toast.error("Please fill in all required fields marked with *.");
+        return;
+      }
+    }
+
+    if (currentStep < steps.length) {
+      setCurrentStep((prev) => prev + 1);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
   };
 
-  const handlePrevious = () => {
-    setCurrentStep((prev) => Math.max(prev - 1, 1));
+  const handleBack = () => {
+    if (currentStep > 1) {
+      setCurrentStep((prev) => prev - 1);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
-  const handlePublish = async (data: FormInputs) => {
+  const onSubmit = async (data: FormInputs) => {
+    if (images.length === 0) {
+      toast.error("Please upload at least 1 pet photo.");
+      return;
+    }
+
     setIsPublishing(true);
-    const toastId = toast.loading("Publishing listing...");
+    const toastId = toast.loading("Publishing listing to PawRescue sanctuary...");
 
     try {
       const res = await fetch("/api/pets", {
@@ -155,10 +230,12 @@ export default function AddListingPage() {
         throw new Error(errData.message || "Failed to create listing.");
       }
 
+      localStorage.removeItem(DRAFT_STORAGE_KEY);
+
       toast.success("Listing published successfully!", {
         id: toastId,
       });
-      router.push("/pets");
+      router.push("/browse");
     } catch (err) {
       console.error("Create listing error:", err);
       const errMsg =
@@ -178,6 +255,7 @@ export default function AddListingPage() {
             control={control}
             register={register}
             errors={errors}
+            watch={watch}
           />
         );
       case 2:
@@ -186,6 +264,8 @@ export default function AddListingPage() {
             control={control}
             register={register}
             errors={errors}
+            watch={watch}
+            setValue={setValue}
           />
         );
       case 3:
@@ -196,6 +276,8 @@ export default function AddListingPage() {
             control={control}
             register={register}
             errors={errors}
+            setValue={setValue}
+            watch={watch}
           />
         );
       case 5:
@@ -213,6 +295,7 @@ export default function AddListingPage() {
             control={control}
             register={register}
             errors={errors}
+            watch={watch}
           />
         );
       case 7:
@@ -225,14 +308,15 @@ export default function AddListingPage() {
   return (
     <div className="min-h-screen flex flex-col bg-brand-bg">
       <Navbar />
+      <Breadcrumb />
 
-      <main className="flex-grow py-12 md:py-16">
+      <main className="flex-grow py-8 md:py-12">
         <Container>
           <div className="max-w-6xl mx-auto">
             {/* Title */}
             <SectionTitle
-              title="Add A Listing"
-              subtitle="Let's build a post to connect this animal with local caretakers."
+              title="Add A Pet Listing"
+              subtitle="Connect this animal with local caretakers, adopters, and neighborhood rescue teams."
               align="center"
             />
 
@@ -241,163 +325,115 @@ export default function AddListingPage() {
               {/* Left Column: Form & Stepper */}
               <div className="lg:col-span-8 space-y-6">
                 
-                {/* Redesigned Premium Stepper Progress Indicator */}
-                <div className="bg-white border border-brand-cardboard/20 rounded-3xl p-5 shadow-xs overflow-hidden">
+                {/* Stepper Progress Indicator */}
+                <div className="glass-panel rounded-3xl p-5 shadow-glass-sm border-white">
                   <div className="overflow-x-auto scrollbar-none snap-x snap-mandatory py-4 relative">
                     <div className="flex items-center justify-between min-w-[760px] md:min-w-0 w-full relative px-10">
                       
-                      {/* One continuous connector line behind ALL steps */}
-                      <div className="absolute top-6 left-[68px] right-[68px] h-1.5 bg-brand-cardboard/15 z-0 rounded-full" />
+                      {/* Connector line behind steps */}
+                      <div className="absolute left-12 right-12 top-1/2 -translate-y-1/2 h-1 bg-brand-cardboard/25 -z-0" />
                       
-                      {/* Green active progression line */}
+                      {/* Completed progress fill line */}
                       <div
-                        className="absolute top-6 left-[68px] h-1.5 bg-brand-green z-0 rounded-full transition-all duration-500 ease-out"
+                        className="absolute left-12 top-1/2 -translate-y-1/2 h-1 bg-grass-green transition-all duration-500 ease-out -z-0"
                         style={{
-                          width: `calc(${
-                            ((currentStep - 1) / (steps.length - 1)) * 100
-                          }% - 4px)`,
+                          width: `${((currentStep - 1) / (steps.length - 1)) * 84}%`,
                         }}
                       />
 
                       {steps.map((label, idx) => {
                         const stepNum = idx + 1;
-                        const isActive = currentStep === stepNum;
-                        const isCompleted = currentStep > stepNum;
+                        const isCompleted = stepNum < currentStep;
+                        const isActive = stepNum === currentStep;
 
                         return (
-                          <button
+                          <div
                             key={idx}
-                            type="button"
                             ref={isActive ? activeStepRef : null}
-                            disabled={!isCompleted && currentStep !== stepNum}
-                            onClick={() =>
-                              isCompleted && setCurrentStep(stepNum)
-                            }
-                            className="relative z-10 flex flex-col items-center snap-center focus:outline-hidden group shrink-0 w-24 cursor-pointer"
+                            className="flex flex-col items-center relative z-10 snap-center group cursor-pointer"
+                            onClick={() => {
+                              if (stepNum < currentStep) {
+                                setCurrentStep(stepNum);
+                              }
+                            }}
                           >
-                            {/* Circle wrapper for perfect vertical centering */}
-                            <div className="h-12 flex items-center justify-center relative">
-                              {isActive && (
-                                <>
-                                  {/* Pulsing ring glowing behind active circle */}
-                                  <div className="absolute inset-0 w-12 h-12 rounded-full bg-brand-green/20 animate-ping -z-10" />
-                                  <div className="absolute -inset-1 rounded-full border-2 border-brand-green/20 -z-10 animate-pulse" />
-                                </>
-                              )}
-
-                              <div
-                                className={`rounded-full flex items-center justify-center font-bold text-sm border-2 transition-all duration-300 ${
-                                  isCompleted
-                                    ? "w-9 h-9 bg-brand-green border-brand-green text-white shadow-xs hover:scale-105"
-                                    : isActive
-                                    ? "w-11 h-11 bg-white border-[3px] border-brand-green text-brand-green shadow-medium scale-110"
-                                    : "w-9 h-9 bg-white border-2 border-brand-cardboard/35 text-brand-cardboard"
-                                }`}
-                              >
-                                {isCompleted ? (
-                                  <Check className="w-4 h-4 text-white stroke-[3px] animate-in zoom-in duration-200" />
-                                ) : (
-                                  <span>{stepNum}</span>
-                                )}
-                              </div>
+                            <div
+                              className={`w-10 h-10 rounded-full flex items-center justify-center font-black text-xs transition-all duration-300 shadow-glass-sm border-2 ${
+                                isCompleted
+                                  ? "bg-grass-green text-white border-grass-green"
+                                  : isActive
+                                  ? "btn-giraffe-primary scale-110"
+                                  : "bg-white text-[#5C4E3D] border-brand-cardboard/40"
+                              }`}
+                            >
+                              {isCompleted ? <Check className="w-5 h-5" /> : stepNum}
                             </div>
-
-                            {/* Centered label below with breathing room */}
                             <span
-                              className={`text-[10px] font-extrabold uppercase mt-3 transition-all duration-300 tracking-wider text-center ${
+                              className={`text-[10px] font-black uppercase tracking-wider mt-2 transition-colors ${
                                 isActive
-                                  ? "text-brand-brown scale-105 font-black"
+                                  ? "text-grass-green font-extrabold"
                                   : isCompleted
-                                  ? "text-brand-green/90"
-                                  : "text-brand-cardboard/80 opacity-75"
+                                  ? "text-[#2C241B]"
+                                  : "text-[#5C4E3D]/70"
                               }`}
                             >
                               {label}
                             </span>
-                          </button>
+                          </div>
                         );
                       })}
                     </div>
                   </div>
                 </div>
 
-                {/* Mobile Collapsible Preview Accordion */}
-                <div className="lg:hidden bg-white border border-brand-cardboard/25 rounded-2xl overflow-hidden shadow-xs">
-                  <button
-                    type="button"
-                    onClick={() => setIsPreviewExpanded(!isPreviewExpanded)}
-                    className="w-full px-5 py-4 flex items-center justify-between font-extrabold text-sm text-brand-brown bg-brand-bg/25 hover:bg-brand-bg/35 transition-colors cursor-pointer focus:outline-hidden"
-                  >
-                    <span className="flex items-center gap-2">
-                      👁️ Live Listing Preview (
-                      {isPreviewExpanded ? "Hide" : "Show"})
-                    </span>
-                    <span className="text-xs">
-                      {isPreviewExpanded ? "▲" : "▼"}
-                    </span>
-                  </button>
-                  {isPreviewExpanded && (
-                    <div className="p-4 border-t border-brand-cardboard/15 max-w-sm mx-auto animate-in slide-in-from-top-3 duration-250">
-                      <LivePreviewCard
-                        formData={watchedValues}
-                        imagePreviews={images}
-                      />
-                    </div>
-                  )}
-                </div>
+                {/* Form Step Body Card */}
+                <form
+                  onSubmit={handleSubmit(onSubmit)}
+                  className="glass-card rounded-3xl p-6 sm:p-8 shadow-glass-lg border-white/95 space-y-6"
+                >
+                  {renderStepContent()}
 
-                {/* Form Card content */}
-                <div className="bg-white border-2 border-brand-cardboard/40 rounded-3xl p-6 md:p-10 shadow-soft-lg">
-                  <form
-                    onSubmit={handleSubmit(handlePublish)}
-                    className="space-y-8"
-                  >
-                    {/* Active step fields */}
-                    {renderStepContent()}
+                  {/* Wizard Bottom Nav Buttons */}
+                  <div className="flex items-center justify-between pt-6 border-t border-brand-cardboard/20">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={handleBack}
+                      disabled={currentStep === 1}
+                    >
+                      ← Back
+                    </Button>
 
-                    {/* Navigation controls */}
-                    <div className="flex items-center justify-between pt-6 border-t border-brand-cardboard/25">
+                    {currentStep < steps.length ? (
                       <Button
-                        variant="ghost"
-                        size="md"
                         type="button"
-                        onClick={handlePrevious}
-                        disabled={currentStep === 1 || isPublishing}
-                        className="opacity-80 hover:opacity-100 disabled:opacity-30 disabled:pointer-events-none"
+                        variant="primary"
+                        onClick={handleNext}
                       >
-                        Previous
+                        Next Step →
                       </Button>
-
-                      {currentStep < steps.length ? (
-                        <Button
-                          variant="wood"
-                          size="md"
-                          type="button"
-                          onClick={handleNext}
-                        >
-                          Next Step
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="primary"
-                          size="md"
-                          type="submit"
-                          loading={isPublishing}
-                        >
-                          Publish Listing
-                        </Button>
-                      )}
-                    </div>
-                  </form>
-                </div>
+                    ) : (
+                      <Button
+                        type="submit"
+                        variant="primary"
+                        loading={isPublishing}
+                      >
+                        🐾 Publish Rescue Listing
+                      </Button>
+                    )}
+                  </div>
+                </form>
               </div>
 
-              {/* Right Column: Desktop Sticky Preview Card */}
-              <div className="hidden lg:block lg:col-span-4 lg:self-start lg:sticky lg:top-28">
-                <div className="bg-white border border-brand-cardboard/25 rounded-3xl p-4 shadow-xs">
-                  <div className="text-center py-2 border-b border-brand-cardboard/10 mb-4">
-                    <span className="text-xs font-black text-brand-brown uppercase tracking-wider">
-                      👁️ Live Listing Preview
+              {/* Right Column: Desktop Sticky Live Preview Card */}
+              <div className="hidden lg:block lg:col-span-4 sticky top-28">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between px-2">
+                    <h3 className="text-xs font-black uppercase tracking-wider text-[#2C241B] flex items-center gap-1.5">
+                      <span>👁</span> Live Card Preview
+                    </h3>
+                    <span className="text-[10px] font-bold text-grass-green glass-pill px-2.5 py-0.5 bg-emerald-50">
+                      Real-time update
                     </span>
                   </div>
                   <LivePreviewCard
@@ -406,6 +442,7 @@ export default function AddListingPage() {
                   />
                 </div>
               </div>
+
             </div>
           </div>
         </Container>

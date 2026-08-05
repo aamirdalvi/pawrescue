@@ -4,23 +4,28 @@ import React, { useEffect, useState } from "react";
 import PetCard, { PetListing } from "@/components/cards/PetCard";
 import SectionTitle from "@/components/ui/SectionTitle";
 
-export default function SimilarListings() {
+interface SimilarListingsProps {
+  currentPetId?: string;
+}
+
+export default function SimilarListings({ currentPetId }: SimilarListingsProps) {
   const [similarPets, setSimilarPets] = useState<PetListing[]>([]);
 
   useEffect(() => {
     async function loadListings() {
+      if (!currentPetId) return;
       try {
-        const res = await fetch("/api/pets");
+        const res = await fetch(`/api/pets/${currentPetId}/similar`);
         if (res.ok) {
           const data = await res.json();
-          setSimilarPets(data.slice(0, 4));
+          setSimilarPets(data);
         }
       } catch (err) {
         console.error("Failed to load similar listings:", err);
       }
     }
     loadListings();
-  }, []);
+  }, [currentPetId]);
 
   if (similarPets.length === 0) {
     return null; // Do not render section if no user-created listings exist

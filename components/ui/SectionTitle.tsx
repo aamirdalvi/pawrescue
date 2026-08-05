@@ -24,17 +24,17 @@ export default function SectionTitle({
       )}
       {...props}
     >
-      <h2 className="text-3xl md:text-4xl font-extrabold text-brand-brown tracking-tight mb-3">
+      <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-[#2C241B] tracking-tight mb-3">
         {title}
       </h2>
       {subtitle && (
-        <p className="text-base md:text-lg text-brand-wood max-w-2xl font-medium leading-relaxed">
+        <p className="text-base md:text-lg text-[#5C4E3D] max-w-2xl font-bold leading-relaxed">
           {subtitle}
         </p>
       )}
       <div
         className={clsx(
-          "h-1.5 w-16 bg-brand-green rounded-full mt-2",
+          "h-1.5 w-16 bg-grass-green rounded-full mt-3",
           align === "center" && "mx-auto",
           align === "right" && "ml-auto"
         )}

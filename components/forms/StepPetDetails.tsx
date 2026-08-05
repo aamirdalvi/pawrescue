@@ -1,5 +1,12 @@
-import React from "react";
-import { UseFormRegister, FieldErrors, Controller, Control } from "react-hook-form";
+import React, { useEffect } from "react";
+import {
+  UseFormRegister,
+  FieldErrors,
+  Controller,
+  Control,
+  UseFormSetValue,
+  UseFormWatch,
+} from "react-hook-form";
 import { FormInputs } from "@/types/form";
 import CustomSelect from "@/components/ui/CustomSelect";
 
@@ -7,34 +14,145 @@ interface StepPetDetailsProps {
   control: Control<FormInputs>;
   register: UseFormRegister<FormInputs>;
   errors: FieldErrors<FormInputs>;
+  setValue?: UseFormSetValue<FormInputs>;
+  watch?: UseFormWatch<FormInputs>;
 }
 
-const breedOptions = [
-  { value: "Labrador Retriever", label: "🐶 Labrador Retriever" },
-  { value: "German Shepherd", label: "🐶 German Shepherd" },
-  { value: "Golden Retriever", label: "🐶 Golden Retriever" },
-  { value: "French Bulldog", label: "🐶 French Bulldog" },
-  { value: "Beagle", label: "🐶 Beagle" },
-  { value: "Poodle", label: "🐶 Poodle" },
-  { value: "Siberian Husky", label: "🐶 Siberian Husky" },
-  { value: "Siamese Cat", label: "🐱 Siamese Cat" },
-  { value: "Persian Cat", label: "🐱 Persian Cat" },
-  { value: "Maine Coon", label: "🐱 Maine Coon" },
-  { value: "Tabby Cat", label: "🐱 Tabby Cat" },
-  { value: "Domestic Shorthair", label: "🐱 Domestic Shorthair" },
-  { value: "Angora Rabbit", label: "🐰 Angora Rabbit" },
-  { value: "Budgerigar Parakeet", label: "🦜 Budgerigar Parakeet" },
-  { value: "Nigerian Dwarf Goat", label: "🐄 Nigerian Dwarf Goat" },
-  { value: "Mixed Breed", label: "🐾 Mixed Breed" },
-  { value: "Others", label: "🐾 Others" },
+const speciesList = [
+  { value: "Dog", label: "🐶 Dog" },
+  { value: "Cat", label: "🐱 Cat" },
+  { value: "Rabbit", label: "🐰 Rabbit" },
+  { value: "Bird", label: "🦜 Bird" },
+  { value: "Cow", label: "🐄 Cow" },
+  { value: "Horse", label: "🐴 Horse" },
+  { value: "Goat", label: "🐐 Goat" },
+  { value: "Buffalo", label: "🦬 Buffalo" },
+  { value: "Other", label: "🐾 Other" },
+];
+
+const breedBySpecies: Record<string, { value: string; label: string }[]> = {
+  Dog: [
+    { value: "Indian Pariah / Desi", label: "🐕 Indian Pariah / Desi Dog" },
+    { value: "Labrador Retriever", label: "🐶 Labrador Retriever" },
+    { value: "Golden Retriever", label: "🐶 Golden Retriever" },
+    { value: "German Shepherd", label: "🐶 German Shepherd" },
+    { value: "Beagle", label: "🐶 Beagle" },
+    { value: "Pug", label: "🐶 Pug" },
+    { value: "Shih Tzu", label: "🐶 Shih Tzu" },
+    { value: "Poodle", label: "🐶 Poodle" },
+    { value: "Siberian Husky", label: "🐶 Siberian Husky" },
+    { value: "Rottweiler", label: "🐶 Rottweiler" },
+    { value: "Doberman", label: "🐶 Doberman" },
+    { value: "Mixed Breed", label: "🐾 Mixed Breed" },
+  ],
+  Cat: [
+    { value: "Domestic Shorthair", label: "🐱 Domestic Shorthair / Desi Cat" },
+    { value: "Persian Cat", label: "🐱 Persian Cat" },
+    { value: "Siamese Cat", label: "🐱 Siamese Cat" },
+    { value: "Maine Coon", label: "🐱 Maine Coon" },
+    { value: "Bengal Cat", label: "🐱 Bengal Cat" },
+    { value: "Tabby Cat", label: "🐱 Tabby Cat" },
+    { value: "Bombay Cat", label: "🐱 Bombay Cat" },
+    { value: "Mixed Breed", label: "🐾 Mixed Breed" },
+  ],
+  Rabbit: [
+    { value: "Holland Lop", label: "🐰 Holland Lop" },
+    { value: "Mini Rex", label: "🐰 Mini Rex" },
+    { value: "Netherland Dwarf", label: "🐰 Netherland Dwarf" },
+    { value: "Lionhead", label: "🐰 Lionhead" },
+    { value: "Angora Rabbit", label: "🐰 Angora Rabbit" },
+    { value: "Mixed Breed", label: "🐾 Mixed Breed" },
+  ],
+  Bird: [
+    { value: "Budgerigar Parakeet", label: "🦜 Budgerigar Parakeet" },
+    { value: "Cockatiel", label: "🦜 Cockatiel" },
+    { value: "Lovebird", label: "🦜 Lovebird" },
+    { value: "African Grey", label: "🦜 African Grey Parrot" },
+    { value: "Canary", label: "🐤 Canary" },
+    { value: "Pigeon / Dove", label: "🕊️ Pigeon / Dove" },
+  ],
+  Cow: [
+    { value: "Gir", label: "🐄 Gir" },
+    { value: "Sahiwal", label: "🐄 Sahiwal" },
+    { value: "Holstein Friesian", label: "🐄 Holstein Friesian" },
+    { value: "Jersey", label: "🐄 Jersey" },
+    { value: "Indigenous / Desi Cow", label: "🐄 Indigenous / Desi Cow" },
+  ],
+  Horse: [
+    { value: "Marwari", label: "🐴 Marwari Horse" },
+    { value: "Kathiawari", label: "🐴 Kathiawari Horse" },
+    { value: "Thoroughbred", label: "🐴 Thoroughbred" },
+    { value: "Pony", label: "🐴 Pony" },
+  ],
+  Goat: [
+    { value: "Jamunapari", label: "🐐 Jamunapari" },
+    { value: "Boer", label: "🐐 Boer" },
+    { value: "Barbari", label: "🐐 Barbari" },
+    { value: "Black Bengal", label: "🐐 Black Bengal" },
+  ],
+  Buffalo: [
+    { value: "Murrah", label: "🦬 Murrah Buffalo" },
+    { value: "Nili-Ravi", label: "🦬 Nili-Ravi" },
+    { value: "Surti", label: "🦬 Surti" },
+    { value: "Indigenous Buffalo", label: "🦬 Indigenous Buffalo" },
+  ],
+  Other: [
+    { value: "Mixed / Crossbreed", label: "🐾 Mixed / Crossbreed" },
+    { value: "Others", label: "🐾 Others" },
+  ],
+};
+
+const colorOptions = [
+  { value: "Black", label: "⚫ Black" },
+  { value: "White", label: "⚪ White" },
+  { value: "Brown", label: "🟤 Brown / Chocolate" },
+  { value: "Golden", label: "🟡 Golden / Fawn" },
+  { value: "Tan", label: "🟠 Tan / Cream" },
+  { value: "Gray", label: "🩶 Gray / Silver" },
+  { value: "Spotted / Calico", label: "⚪⚫ Spotted / Calico" },
+  { value: "Tricolor", label: "🎨 Tricolor" },
+  { value: "Red / Ginger", label: "🔴 Red / Ginger" },
+  { value: "Other", label: "🐾 Other" },
 ];
 
 export default function StepPetDetails({
   control,
   register,
   errors,
+  setValue,
+  watch,
 }: StepPetDetailsProps) {
-  // Input constraint filters
+  const selectedSpecies = watch ? watch("species") : "Dog";
+  const ageYears = watch ? watch("ageYears") || "0" : "0";
+  const ageMonths = watch ? watch("ageMonths") || "0" : "0";
+  const weightNum = watch ? watch("weight") || "" : "";
+  const weightUnit = watch ? watch("weightUnit") || "kg" : "kg";
+  const heightNum = watch ? watch("height") || "" : "";
+  const heightUnit = watch ? watch("heightUnit") || "cm" : "cm";
+
+  // Automatically compute the unified age string
+  useEffect(() => {
+    if (!setValue) return;
+    const yrs = parseInt(ageYears, 10) || 0;
+    const mths = parseInt(ageMonths, 10) || 0;
+
+    let computedAge = "";
+    if (yrs > 0 && mths > 0) {
+      computedAge = `${yrs} Yr${yrs > 1 ? "s" : ""} ${mths} Mth${mths > 1 ? "s" : ""}`;
+    } else if (yrs > 0) {
+      computedAge = `${yrs} Year${yrs > 1 ? "s" : ""}`;
+    } else if (mths > 0) {
+      computedAge = `${mths} Month${mths > 1 ? "s" : ""}`;
+    } else {
+      computedAge = "Under 1 Month";
+    }
+
+    setValue("age", computedAge, { shouldValidate: true });
+  }, [ageYears, ageMonths, setValue]);
+
+  const currentBreedOptions =
+    breedBySpecies[selectedSpecies] || breedBySpecies.Dog;
+
   const handleDigitsOnly = (e: React.FormEvent<HTMLInputElement>) => {
     e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, "");
   };
@@ -54,7 +172,7 @@ export default function StepPetDetails({
           Pet Information
         </h2>
         <p className="text-sm text-brand-wood font-medium">
-          Tell us about the animal&apos;s traits. Provide as much detail as you can to help identification.
+          Tell us about the animal&apos;s physical traits, age, gender, and breed to help caretakers identify them.
         </p>
       </div>
 
@@ -79,7 +197,7 @@ export default function StepPetDetails({
           )}
         </div>
 
-        {/* Species Dropdown */}
+        {/* Species Searchable Dropdown */}
         <div className="space-y-2">
           <Controller
             name="species"
@@ -89,23 +207,20 @@ export default function StepPetDetails({
               <CustomSelect
                 label="Species *"
                 value={field.value}
-                onChange={field.onChange}
+                onChange={(val) => {
+                  field.onChange(val);
+                  if (setValue) setValue("breed", "");
+                }}
                 placeholder="Select Species"
+                searchable={true}
                 error={errors.species?.message}
-                options={[
-                  { value: "Dog", label: "🐶 Dog" },
-                  { value: "Cat", label: "🐱 Cat" },
-                  { value: "Bird", label: "🦜 Bird" },
-                  { value: "Rabbit", label: "🐰 Rabbit" },
-                  { value: "Farm Animal", label: "🐄 Farm Animal" },
-                  { value: "Others", label: "🐾 Others" },
-                ]}
+                options={speciesList}
               />
             )}
           />
         </div>
 
-        {/* Breed Dropdown (Searchable) */}
+        {/* Breed Searchable Input */}
         <div className="space-y-2">
           <Controller
             name="breed"
@@ -116,108 +231,165 @@ export default function StepPetDetails({
                 label="Breed *"
                 value={field.value}
                 onChange={field.onChange}
-                placeholder="Select Breed"
+                placeholder={`Select ${selectedSpecies || "Pet"} Breed`}
                 searchable={true}
                 error={errors.breed?.message}
-                options={breedOptions}
+                options={currentBreedOptions}
               />
             )}
           />
         </div>
 
-        {/* Gender Dropdown */}
+        {/* Color Searchable Dropdown */}
         <div className="space-y-2">
+          <Controller
+            name="color"
+            control={control}
+            rules={{ required: "Primary color is required" }}
+            render={({ field }) => (
+              <CustomSelect
+                label="Color *"
+                value={field.value}
+                onChange={field.onChange}
+                placeholder="Select Color"
+                searchable={true}
+                error={errors.color?.message}
+                options={colorOptions}
+              />
+            )}
+          />
+        </div>
+
+        {/* Segmented Gender Buttons */}
+        <div className="space-y-2 md:col-span-2">
+          <label className="block text-xs font-bold text-brand-wood uppercase tracking-wider">
+            Gender *
+          </label>
           <Controller
             name="gender"
             control={control}
-            rules={{ required: "Gender is required" }}
+            rules={{ required: "Please select a gender" }}
             render={({ field }) => (
-              <CustomSelect
-                label="Gender *"
-                value={field.value}
-                onChange={field.onChange}
-                placeholder="Select Gender"
-                error={errors.gender?.message}
-                options={[
-                  { value: "Male", label: "Male" },
-                  { value: "Female", label: "Female" },
-                  { value: "Unknown", label: "Unknown" },
-                ]}
-              />
+              <div className="grid grid-cols-3 gap-3">
+                {[
+                  { value: "Male", label: "♂️ Male" },
+                  { value: "Female", label: "♀️ Female" },
+                  { value: "Unknown", label: "❓ Unknown" },
+                ].map((g) => {
+                  const isSelected = field.value === g.value;
+                  return (
+                    <button
+                      key={g.value}
+                      type="button"
+                      onClick={() => field.onChange(g.value)}
+                      className={`py-3 px-4 rounded-xl text-sm font-extrabold border-2 transition-all duration-200 cursor-pointer text-center select-none ${
+                        isSelected
+                          ? "bg-brand-green text-white border-brand-green shadow-xs scale-102"
+                          : "bg-white text-brand-brown border-brand-cardboard/35 hover:border-brand-wood/40 hover:bg-brand-bg/30"
+                      }`}
+                    >
+                      {g.label}
+                    </button>
+                  );
+                })}
+              </div>
             )}
           />
-        </div>
-
-        {/* Age (Digits Only) */}
-        <div className="space-y-2">
-          <label className="block text-xs font-bold text-brand-wood uppercase tracking-wider">
-            Age (Months/Years in Digits) *
-          </label>
-          <input
-            type="text"
-            inputMode="numeric"
-            placeholder="e.g. 12 (or '0' if newborn)"
-            onInput={handleDigitsOnly}
-            {...register("age", { required: "Age is required" })}
-            className={`input-friendly font-medium ${
-              errors.age ? "border-red-500 bg-red-50/10 focus:ring-red-500" : ""
-            }`}
-          />
-          {errors.age && (
+          {errors.gender && (
             <p className="text-red-500 text-xs font-bold mt-1">
-              {errors.age.message}
+              {errors.gender.message}
             </p>
           )}
         </div>
 
-        {/* Color */}
-        <div className="space-y-2">
+        {/* Structured Age (Years + Months) */}
+        <div className="space-y-2 md:col-span-2">
           <label className="block text-xs font-bold text-brand-wood uppercase tracking-wider">
-            Color *
+            Pet Age *
           </label>
-          <input
-            type="text"
-            placeholder="e.g. Golden / Black & White tabby"
-            {...register("color", { required: "Color is required" })}
-            className={`input-friendly font-medium ${
-              errors.color ? "border-red-500 bg-red-50/10 focus:ring-red-500" : ""
-            }`}
-          />
-          {errors.color && (
-            <p className="text-red-500 text-xs font-bold mt-1">
-              {errors.color.message}
-            </p>
-          )}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-[11px] font-semibold text-brand-wood mb-1">
+                Years
+              </label>
+              <select
+                {...register("ageYears")}
+                className="input-friendly font-medium bg-white"
+              >
+                {Array.from({ length: 26 }).map((_, i) => (
+                  <option key={i} value={i}>
+                    {i} {i === 1 ? "Year" : "Years"}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-[11px] font-semibold text-brand-wood mb-1">
+                Months
+              </label>
+              <select
+                {...register("ageMonths")}
+                className="input-friendly font-medium bg-white"
+              >
+                {Array.from({ length: 12 }).map((_, i) => (
+                  <option key={i} value={i}>
+                    {i} {i === 1 ? "Month" : "Months"}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+          <p className="text-[11px] font-bold text-brand-green mt-1">
+            Selected Age: {watch ? watch("age") || "Under 1 Month" : ""}
+          </p>
         </div>
 
-        {/* Height (Decimals Only) */}
+        {/* Weight with Unit Selector */}
         <div className="space-y-2">
           <label className="block text-xs font-bold text-brand-wood uppercase tracking-wider">
-            Height (cm)
+            Weight
           </label>
-          <input
-            type="text"
-            inputMode="decimal"
-            placeholder="e.g. 45.5"
-            onInput={handleDecimalsOnly}
-            {...register("height")}
-            className="input-friendly font-medium"
-          />
+          <div className="flex gap-2">
+            <input
+              type="text"
+              inputMode="decimal"
+              placeholder="e.g. 12.5"
+              onInput={handleDecimalsOnly}
+              {...register("weight")}
+              className="input-friendly font-medium flex-grow"
+            />
+            <select
+              {...register("weightUnit")}
+              className="input-friendly font-extrabold w-24 bg-white"
+            >
+              <option value="kg">kg</option>
+              <option value="lbs">lbs</option>
+            </select>
+          </div>
         </div>
 
-        {/* Weight (Decimals Only) */}
+        {/* Height with Unit Selector */}
         <div className="space-y-2">
           <label className="block text-xs font-bold text-brand-wood uppercase tracking-wider">
-            Weight (kg)
+            Height
           </label>
-          <input
-            type="text"
-            inputMode="decimal"
-            placeholder="e.g. 12.8"
-            onInput={handleDecimalsOnly}
-            {...register("weight")}
-            className="input-friendly font-medium"
-          />
+          <div className="flex gap-2">
+            <input
+              type="text"
+              inputMode="decimal"
+              placeholder="e.g. 45"
+              onInput={handleDecimalsOnly}
+              {...register("height")}
+              className="input-friendly font-medium flex-grow"
+            />
+            <select
+              {...register("heightUnit")}
+              className="input-friendly font-extrabold w-24 bg-white"
+            >
+              <option value="cm">cm</option>
+              <option value="ft">ft</option>
+            </select>
+          </div>
         </div>
       </div>
     </div>

@@ -9,12 +9,21 @@ export interface FormInputs {
   breed: string;
   gender: string;
   age: string;
+  ageYears?: string;
+  ageMonths?: string;
   height?: string;
+  heightUnit?: string;
   weight?: string;
+  weightUnit?: string;
   color: string;
   // Step 3
   vaccinated: boolean;
   sterilized: boolean;
+  microchipped?: boolean;
+  specialNeeds?: boolean;
+  friendlyChildren?: boolean;
+  friendlyDogs?: boolean;
+  friendlyCats?: boolean;
   medicalNotes?: string;
   // Step 4
   country: string;
@@ -31,4 +40,6 @@ export interface FormInputs {
   phone: string;
   email: string;
   preferredContact: string;
+  contactTime?: string;
+  sameWhatsApp?: boolean;
 }

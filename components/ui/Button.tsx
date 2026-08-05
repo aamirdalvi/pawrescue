@@ -34,26 +34,25 @@ export default function Button({
   ...props
 }: ButtonProps) {
   const baseStyles =
-    "inline-flex items-center justify-center font-bold transition-all duration-200 cursor-pointer focus:outline-hidden disabled:opacity-50 disabled:cursor-not-allowed select-none";
+    "inline-flex items-center justify-center font-black transition-all duration-300 cursor-pointer focus:outline-hidden disabled:opacity-50 disabled:cursor-not-allowed select-none rounded-3xl";
 
   const variants = {
-    primary: "btn-brand-primary",
-    secondary: "btn-brand-secondary",
+    primary: "btn-giraffe-primary",
+    secondary: "btn-grass-secondary",
     outline: "btn-brand-outline",
     danger: "btn-brand-danger",
-    cta: "btn-brand-cta",
+    cta: "btn-giraffe-primary",
     ghost:
-      "bg-transparent text-brand-brown hover:bg-brand-cardboard/15 rounded-btn transition-colors duration-200",
-    wood: "btn-brand-cta",
+      "bg-transparent text-brand-brown hover:bg-brand-cardboard/20 rounded-3xl transition-colors duration-200",
+    wood: "btn-grass-secondary",
   };
 
   const sizes = {
-    sm: "px-3.5 py-1.5 text-xs",
-    md: "px-5 py-2.5 text-sm",
-    lg: "px-7 py-3.5 text-base",
+    sm: "px-4 py-2 text-xs",
+    md: "px-6 py-3 text-sm",
+    lg: "px-8 py-4 text-base",
   };
 
-  // If variant is CTA, use larger default sizing
   const resolvedSize = variant === "cta" ? "lg" : size;
 
   const buttonClasses = clsx(
@@ -88,7 +87,7 @@ export default function Button({
           />
         </svg>
       )}
-      {children}
+      <span className="relative z-10 flex items-center gap-2">{children}</span>
     </>
   );
 

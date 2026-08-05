@@ -22,7 +22,7 @@ export async function GET(
     const pet = await Pet.findOneAndUpdate(
       query,
       { $inc: { views: 1 } },
-      { new: true }
+      { returnDocument: "after" }
     );
 
     if (!pet) {

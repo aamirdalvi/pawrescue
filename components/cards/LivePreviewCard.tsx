@@ -14,52 +14,65 @@ export default function LivePreviewCard({
   imagePreviews = [],
 }: LivePreviewCardProps) {
   const statusConfig = {
-    lost: { variant: "lost" as const, label: "🚨 Lost Pet" },
-    found: { variant: "found" as const, label: "🔍 Found Stray" },
-    adopt: { variant: "adopt" as const, label: "🏡 Adopt Me" },
-    foster: { variant: "foster" as const, label: "🤝 Foster" },
+    lost: { variant: "danger" as const, label: "🚨 Lost Pet" },
+    found: { variant: "warning" as const, label: "🔍 Found Stray" },
+    adopt: { variant: "success" as const, label: "🏡 Adopt Me" },
+    foster: { variant: "info" as const, label: "🤝 Foster" },
   };
 
   const currentStatus =
     statusConfig[formData.listingType as "lost" | "found" | "adopt" | "foster"] ||
     statusConfig.adopt;
 
-  // Render a responsive animal representation when no custom photos exist
-  const speciesEmoji = {
+  const speciesEmoji: Record<string, string> = {
     Dog: "🐶",
     Cat: "🐱",
-    Bird: "🦜",
     Rabbit: "🐰",
-    "Farm Animal": "🐄",
-    Others: "🐾",
-  }[formData.species || "Others"] || "🐾";
+    Bird: "🦜",
+    Cow: "🐄",
+    Horse: "🐴",
+    Goat: "🐐",
+    Buffalo: "🦬",
+    Other: "🐾",
+  };
+
+  const emoji = speciesEmoji[formData.species || "Other"] || "🐾";
+
+  const activeImage =
+    imagePreviews && imagePreviews.length > 0
+      ? imagePreviews[0]
+      : formData.images && formData.images.length > 0
+      ? formData.images[0]
+      : null;
 
   return (
-    <div className="card-marketplace bg-white border-2 border-brand-cardboard/35 rounded-3xl overflow-hidden shadow-medium flex flex-col h-full">
-      {/* 1. Header/Thumbnail Container */}
-      <div className="relative h-48 bg-gradient-to-br from-brand-cardboard/20 to-brand-bg shrink-0 flex items-center justify-center border-b border-brand-cardboard/15 shadow-inner">
-        {imagePreviews.length > 0 ? (
+    <div className="glass-card rounded-3xl overflow-hidden shadow-glass-md flex flex-col h-full transition-all duration-300 border-white/90">
+      {/* 1. Image / Animal Illustration Display */}
+      <div className="relative h-48 bg-gradient-to-br from-brand-cardboard/20 via-brand-bg to-brand-cardboard/10 shrink-0 flex items-center justify-center border-b border-brand-cardboard/15 shadow-inner">
+        {activeImage ? (
           <img
-            src={imagePreviews[0]}
+            src={activeImage}
             alt="Live listing preview"
             className="w-full h-full object-cover"
           />
         ) : (
           <div className="flex flex-col items-center space-y-2 animate-pulse">
-            <span className="text-5xl">{speciesEmoji}</span>
-            <span className="text-[10px] font-black text-brand-wood/80 uppercase tracking-widest bg-brand-cardboard/30 px-3 py-1 rounded-full">
+            <span className="text-5xl">{emoji}</span>
+            <span className="text-[10px] font-black text-brand-wood uppercase tracking-widest glass-pill px-3 py-1">
               Photo Preview Placeholder
             </span>
           </div>
         )}
 
-        <div className="absolute top-3 left-3">
-          <Badge variant={currentStatus.variant}>{currentStatus.label}</Badge>
+        <div className="absolute top-3 left-3 z-10">
+          <Badge variant={currentStatus.variant} className="shadow-glass-sm">
+            {currentStatus.label}
+          </Badge>
         </div>
 
         <button
           type="button"
-          className="absolute top-3 right-3 p-2 bg-white/95 hover:bg-white text-red-500 rounded-full shadow-xs transition-transform duration-200 active:scale-90"
+          className="absolute top-3 right-3 p-2 glass-pill bg-white/90 text-red-500 rounded-full shadow-glass-sm transition-transform duration-200 active:scale-90 z-10 cursor-pointer"
         >
           <Heart className="w-4 h-4 fill-current" />
         </button>
@@ -67,82 +80,97 @@ export default function LivePreviewCard({
 
       {/* 2. Content Body */}
       <div className="p-5 flex-grow flex flex-col justify-between space-y-4">
-        <div className="space-y-2">
+        <div className="space-y-2.5">
           {/* Title & Breed */}
           <div>
-            <span className="text-[10px] font-bold text-brand-wood uppercase tracking-wider block">
+            <span className="text-[10px] font-bold text-brand-wood/80 uppercase tracking-wider block">
               {formData.breed || "Breed Not Specified"}
             </span>
             <h3 className="text-base font-extrabold text-brand-brown line-clamp-1">
-              {formData.title || "New Rescue Post"}
+              {formData.title || "New Rescue Listing"}
             </h3>
           </div>
 
           {/* Key Traits Grid */}
-          <div className="grid grid-cols-3 gap-2 py-2">
-            <div className="bg-brand-bg/50 border border-brand-cardboard/15 rounded-xl p-2 text-center">
-              <span className="text-[9px] font-bold text-brand-wood block uppercase tracking-wider">
+          <div className="grid grid-cols-3 gap-2 py-1">
+            <div className="glass-panel p-2 text-center rounded-xl border-white/60">
+              <span className="text-[9px] font-bold text-brand-wood/80 block uppercase tracking-wider">
                 Name
               </span>
               <span className="text-xs font-extrabold text-brand-brown block truncate">
                 {formData.petName || "Unknown"}
               </span>
             </div>
-            <div className="bg-brand-bg/50 border border-brand-cardboard/15 rounded-xl p-2 text-center">
-              <span className="text-[9px] font-bold text-brand-wood block uppercase tracking-wider">
+            <div className="glass-panel p-2 text-center rounded-xl border-white/60">
+              <span className="text-[9px] font-bold text-brand-wood/80 block uppercase tracking-wider">
                 Gender
               </span>
               <span className="text-xs font-extrabold text-brand-brown block truncate">
                 {formData.gender || "Unknown"}
               </span>
             </div>
-            <div className="bg-brand-bg/50 border border-brand-cardboard/15 rounded-xl p-2 text-center">
-              <span className="text-[9px] font-bold text-brand-wood block uppercase tracking-wider">
+            <div className="glass-panel p-2 text-center rounded-xl border-white/60">
+              <span className="text-[9px] font-bold text-brand-wood/80 block uppercase tracking-wider">
                 Age
               </span>
               <span className="text-xs font-extrabold text-brand-brown block truncate">
-                {formData.age ? `${formData.age}` : "Unknown"}
+                {formData.age || "Unknown"}
               </span>
             </div>
           </div>
 
           {/* Physical Attributes */}
-          <div className="flex flex-wrap gap-x-4 gap-y-1.5 text-xs text-brand-wood font-semibold">
+          <div className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-brand-wood font-semibold">
             {formData.color && (
               <span>
-                🎨 <strong className="text-brand-brown">Color:</strong> {formData.color}
+                🎨 <strong className="text-brand-brown">{formData.color}</strong>
               </span>
             )}
             {formData.height && (
               <span>
-                📏 <strong className="text-brand-brown">H:</strong> {formData.height}
+                📏 <strong className="text-brand-brown">{formData.height} {formData.heightUnit || "cm"}</strong>
               </span>
             )}
             {formData.weight && (
               <span>
-                ⚖️ <strong className="text-brand-brown">W:</strong> {formData.weight}
+                ⚖️ <strong className="text-brand-brown">{formData.weight} {formData.weightUnit || "kg"}</strong>
               </span>
             )}
           </div>
 
-          {/* Description */}
-          <p className="text-xs text-brand-wood/90 leading-relaxed line-clamp-3 italic pt-1">
+          {/* Description Preview */}
+          <p className="text-xs text-brand-wood/90 leading-relaxed line-clamp-3 italic pt-0.5">
             {formData.description || "Describe the pet details to see them live here..."}
           </p>
         </div>
 
         {/* 3. Caretaker & Health Summary */}
         <div className="pt-3 border-t border-brand-cardboard/15 space-y-2.5">
-          {/* Health Stats */}
-          <div className="flex flex-wrap gap-2">
+          {/* Health Badges */}
+          <div className="flex flex-wrap gap-1.5">
             {formData.vaccinated && (
-              <span className="inline-flex items-center text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-full px-2 py-0.5">
-                <Activity className="w-3 h-3 mr-1" /> Vaccinated
+              <span className="glass-pill text-[10px] font-bold text-emerald-700 bg-emerald-50/70 border-emerald-200 px-2 py-0.5">
+                <Activity className="w-3 h-3 mr-1 inline" /> Vaccinated
               </span>
             )}
             {formData.sterilized && (
-              <span className="inline-flex items-center text-[10px] font-bold text-blue-700 bg-blue-50 border border-blue-100 rounded-full px-2 py-0.5">
+              <span className="glass-pill text-[10px] font-bold text-blue-700 bg-blue-50/70 border-blue-200 px-2 py-0.5">
                 ✂️ Sterilized
+              </span>
+            )}
+            {formData.microchipped && (
+              <span className="glass-pill text-[10px] font-bold text-purple-700 bg-purple-50/70 border-purple-200 px-2 py-0.5">
+                🏷️ Chipped
+              </span>
+            )}
+            {formData.specialNeeds && (
+              <span className="glass-pill text-[10px] font-bold text-amber-700 bg-amber-50/70 border-amber-200 px-2 py-0.5">
+                ♿ Special Needs
+              </span>
+            )}
+            {formData.friendlyChildren && (
+              <span className="glass-pill text-[10px] font-bold text-teal-700 bg-teal-50/70 border-teal-200 px-2 py-0.5">
+                👶 Kids Friendly
               </span>
             )}
           </div>
@@ -150,17 +178,17 @@ export default function LivePreviewCard({
           {/* Location & Contact Info */}
           <div className="space-y-1.5 text-[10px] font-bold text-brand-brown">
             <div className="flex items-center gap-1.5">
-              <MapPin className="w-3.5 h-3.5 text-brand-wood shrink-0" />
+              <MapPin className="w-3.5 h-3.5 text-brand-green shrink-0" />
               <span className="truncate">
-                {formData.city || "City"}, {formData.state || "State"}
+                {formData.city || "City"}, {formData.state || "State"}{formData.country ? `, ${formData.country}` : ""}
               </span>
             </div>
 
             {formData.ownerName && (
-              <div className="flex items-center justify-between text-brand-wood/80 pt-1 border-t border-brand-cardboard/10">
+              <div className="flex items-center justify-between text-brand-wood/80 pt-1.5 border-t border-brand-cardboard/10">
                 <div className="flex items-center gap-1.5">
-                  <span className="bg-brand-cardboard/25 text-brand-wood text-[9px] px-1.5 py-0.5 rounded-sm">
-                    Owner
+                  <span className="glass-pill text-brand-wood text-[9px] font-bold px-2 py-0.5 uppercase">
+                    Caretaker
                   </span>
                   <span className="truncate">{formData.ownerName}</span>
                 </div>
