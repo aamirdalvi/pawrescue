@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Search, Menu, X, PlusCircle, Sun, Moon } from "lucide-react";
 import Button from "@/components/ui/Button";
+import Image from "next/image";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -65,14 +66,16 @@ export default function Navbar() {
         }`}
       >
         <div className="flex items-center justify-between">
-          {/* Left - Giraffe & Paw Badge Logo */}
+          {/* Left - Official PawRescue Logo & Brand Name */}
           <Link href="/" className="flex items-center space-x-3 group cursor-pointer">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-400 via-orange-400 to-amber-500 flex items-center justify-center border border-white/90 shadow-glass-sm group-hover:scale-105 transition-transform duration-300 relative overflow-hidden">
-              <div className="absolute inset-0 giraffe-pattern-overlay opacity-40" />
-              <span className="text-xl relative z-10 group-hover:rotate-12 transition-transform duration-300">
-                🐾
-              </span>
-            </div>
+            <Image
+              src="/PawRescueLogo.png"
+              alt="PawRescue Logo"
+              width={44}
+              height={44}
+              className="w-10 h-10 md:w-11 md:h-11 object-contain group-hover:scale-105 transition-transform duration-300"
+              priority
+            />
             <div>
               <span className="font-black text-xl md:text-2xl tracking-tight text-brand-brown block leading-none">
                 Paw<span className="text-grass-green">Rescue</span>
