@@ -1,36 +1,196 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🐾 PawRescue
 
-## Getting Started
+<div align="center">
 
-First, run the development server:
+### Rescue • Adopt • Reunite
+
+*A modern full-stack pet rescue and adoption platform built with Next.js, TypeScript, Tailwind CSS, and MongoDB Atlas.*
+
+![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4-38BDF8?style=for-the-badge&logo=tailwind-css)
+![MongoDB](https://img.shields.io/badge/MongoDB_Atlas-Database-47A248?style=for-the-badge&logo=mongodb)
+![Mongoose](https://img.shields.io/badge/Mongoose-ODM-880000?style=for-the-badge)
+
+</div>
+
+---
+
+## 📖 About
+
+PawRescue is a modern web platform designed to help communities rescue, reunite, and rehome animals. Inspired by marketplace platforms, it allows users to create detailed listings for pets that are available for adoption, reported lost, found as strays, or in need of foster care.
+
+The project demonstrates a complete full-stack CRUD application with a responsive interface, MongoDB Atlas backend, and scalable architecture built using the latest Next.js App Router.
+
+---
+
+## ✨ Features
+
+- 🐶 Create detailed pet rescue listings
+- 🐱 Lost & Found pet reporting
+- ❤️ Pet adoption listings
+- 🏡 Foster request listings
+- 📝 Multi-step listing form
+- 📸 Image upload with live preview
+- 🔍 Browse and search listings
+- 📱 Fully responsive UI
+- ☁ MongoDB Atlas cloud database
+- 🔄 Complete CRUD Operations
+- ⚡ Next.js App Router
+- 🎨 Modern animal-themed interface
+
+---
+
+## 🛠 Tech Stack
+
+| Technology | Usage |
+|------------|-------|
+| Next.js 16 | Frontend & Backend |
+| React | UI Library |
+| TypeScript | Type Safety |
+| Tailwind CSS | Styling |
+| MongoDB Atlas | Cloud Database |
+| Mongoose | Database ODM |
+| React Hook Form | Form Management |
+| Framer Motion | Animations |
+| Lucide React | Icons |
+
+---
+
+## 📂 Project Structure
+
+```text
+pawrescue/
+│
+├── app/
+│   ├── api/
+│   ├── about/
+│   ├── browse/
+│   ├── contact/
+│   ├── listings/
+│   ├── pets/
+│   └── add-listing/
+│
+├── components/
+├── lib/
+├── models/
+├── public/
+├── types/
+├── utils/
+│
+├── .env.example
+├── package.json
+└── README.md
+```
+
+---
+
+## 🚀 Getting Started
+
+### Clone the repository
+
+```bash
+git clone https://github.com/aamirdalvi/pawrescue.git
+```
+
+```bash
+cd pawrescue
+```
+
+### Install dependencies
+
+```bash
+npm install
+```
+
+### Configure environment variables
+
+Create a `.env.local` file.
+
+```env
+MONGODB_URI=your_mongodb_connection_string
+```
+
+### Start the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 📸 Screenshots
 
-To learn more about Next.js, take a look at the following resources:
+> Screenshots will be added as the project evolves.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- 🏠 Home Page
+- 🔍 Browse Pets
+- ➕ Add Listing
+- 📄 Listing Details
+- 🗂 Admin Dashboard *(Coming Soon)*
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 🗺 Roadmap
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Current
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- ✅ MongoDB Atlas Integration
+- ✅ CRUD Operations
+- ✅ Multi-step Listing Form
+- ✅ Browse Listings
+- ✅ Responsive Design
+
+### Planned
+
+- 🔐 Authentication
+- 🛡 Admin Dashboard
+- ☁ Cloudinary Image Upload
+- ❤️ Wishlist / Favorites
+- 👁 View Counter
+- 📊 Analytics Dashboard
+- 📍 Interactive Maps
+- 📩 Email Notifications
+
+---
+
+## 🤝 Contributing
+
+Contributions, suggestions, and improvements are welcome.
+
+Feel free to fork the repository and submit a Pull Request.
+
+---
+
+## 👨‍💻 Developer
+
+**Aamir Dalvi**
+
+Student Roll No: **417**
+College Name: **GN KHALSA COLLEGE OF ARTS,SCIENCE AND COMMERCE**
+
+GitHub: https://github.com/aamirdalvi
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**.
+
+---
+
+<div align="center">
+
+### 🐾 PawRescue
+
+**Built with ❤️ using Next.js & MongoDB Atlas**
+
+© 2026 Aamir Dalvi
+
+</div>
