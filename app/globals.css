@@ -61,6 +61,428 @@ body {
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
 }
 
+/* Make main page wrappers transparent and stack them above background particles */
+div.min-h-screen.flex.flex-col.bg-brand-bg {
+  background-color: transparent !important;
+  position: relative;
+  z-index: 10;
+}
+
+/* ========================================================== */
+/* DARK THEME SPECIFICATIONS */
+/* ========================================================== */
+.dark {
+  --background: #0B0907;
+  --foreground: #F5EDDF;
+
+  /* Brand Palette overrides */
+  --color-brand-bg: #0B0907;
+  --color-brand-cream: #0B0907;
+  --color-brand-brown: #FAF5ED;
+  --color-brand-wood: #B8A89A;
+  --color-brand-muted: #8E7E70;
+
+  /* Override white utility globally for dark mode cards & backgrounds to contrast clearly */
+  --color-white: #1A140E;
+
+  /* Border overrides to look premium and dark */
+  --color-brand-cardboard: rgba(231, 199, 159, 0.15);
+  --color-brand-cardboard\/15: rgba(231, 199, 159, 0.08);
+  --color-brand-cardboard\/25: rgba(231, 199, 159, 0.12);
+  --color-brand-cardboard\/35: rgba(231, 199, 159, 0.15);
+  --color-brand-cardboard\/40: rgba(231, 199, 159, 0.18);
+  --color-brand-cardboard\/45: rgba(231, 199, 159, 0.20);
+}
+
+/* Force high contrast text on hardcoded text colors inside dark theme */
+.dark h1,
+.dark h2,
+.dark h3,
+.dark h4,
+.dark h5,
+.dark h6,
+.dark .text-brand-brown,
+.dark .text-\[\#2C241B\],
+.dark .text-\[\#2C2C2B\] {
+  color: #FAF5ED !important;
+}
+
+.dark p,
+.dark .text-brand-wood,
+.dark label,
+.dark .text-\[\#5C4E3D\] {
+  color: #B8A89A !important;
+}
+
+.dark .text-brand-muted,
+.dark span:not(.text-grass-green):not(.badge-lost):not(.badge-found):not(.badge-adopt):not(.badge-foster):not(.rounded-full) {
+  color: #8E7E70;
+}
+
+/* Brighten the Hero title 'FRIEND' gradient in dark mode */
+.dark .bg-gradient-to-r[class*="from-grass-green"] {
+  background: linear-gradient(to right, #4ade80, #34d399, #FAF5ED) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+/* Clean up light-themed section backgrounds and gradients in dark mode */
+.dark section,
+.dark main {
+  background-image: none !important;
+  background-color: transparent !important;
+}
+
+.dark #categories,
+.dark #why-choose-us,
+.dark .section-spacing,
+.dark section[class*="bg-gradient-to-b"] {
+  background: linear-gradient(to bottom, rgba(28, 23, 18, 0.4) 0%, #0B0907 100%) !important;
+}
+
+/* Card icon badges dark theme optimizations */
+.dark .bg-emerald-100\/90,
+.dark .bg-emerald-100,
+.dark .bg-gradient-to-br[class*="from-emerald-100"] {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(20, 184, 166, 0.1)) !important;
+  color: #a7f3d0 !important;
+  border-color: rgba(16, 185, 129, 0.3) !important;
+}
+
+.dark .bg-rose-100\/90,
+.dark .bg-rose-100,
+.dark .bg-gradient-to-br[class*="from-rose-100"] {
+  background: linear-gradient(135deg, rgba(244, 63, 94, 0.15), rgba(236, 72, 153, 0.1)) !important;
+  color: #fecdd3 !important;
+  border-color: rgba(244, 63, 94, 0.3) !important;
+}
+
+.dark .bg-amber-100\/90,
+.dark .bg-amber-100,
+.dark .bg-gradient-to-br[class*="from-amber-100"] {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(249, 115, 22, 0.1)) !important;
+  color: #fde68a !important;
+  border-color: rgba(245, 158, 11, 0.3) !important;
+}
+
+.dark .bg-sky-100\/90,
+.dark .bg-sky-100,
+.dark .bg-gradient-to-br[class*="from-sky-100"] {
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(59, 130, 246, 0.1)) !important;
+  color: #bae6fd !important;
+  border-color: rgba(14, 165, 233, 0.3) !important;
+}
+
+.dark .bg-purple-100\/90,
+.dark .bg-purple-100,
+.dark .bg-gradient-to-br[class*="from-purple-100"] {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(99, 102, 241, 0.1)) !important;
+  color: #e9d5ff !important;
+  border-color: rgba(168, 85, 247, 0.3) !important;
+}
+
+/* Force SVGs inside badge boxes to inherit neon colors in dark mode instead of staying dark */
+.dark .bg-emerald-100\/90 svg,
+.dark .bg-rose-100\/90 svg,
+.dark .bg-amber-100\/90 svg,
+.dark .bg-sky-100\/90 svg,
+.dark .bg-purple-100\/90 svg,
+.dark .bg-gradient-to-br svg {
+  color: inherit !important;
+  stroke: currentColor !important;
+}
+
+.dark .glass-panel {
+  background: rgba(28, 23, 18, 0.88);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 24px 50px -10px rgba(0, 0, 0, 0.35), inset 0 1px 1px 0 rgba(255, 255, 255, 0.05);
+  color: #FAF5ED;
+}
+
+.dark .glass-pill {
+  background: rgba(28, 23, 18, 0.88);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #FAF5ED;
+}
+
+/* Premium dark card and hover overrides */
+.dark .glass-card {
+  background: rgba(26, 20, 14, 0.96) !important;
+  border-color: rgba(231, 199, 159, 0.08) !important;
+  box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.55), inset 0 1px 1px 0 rgba(255, 255, 255, 0.05) !important;
+  color: #FAF5ED !important;
+}
+
+.dark .glass-card:hover {
+  background: rgba(35, 27, 19, 0.98) !important;
+  border-color: rgba(231, 199, 159, 0.15) !important;
+  box-shadow: 0 32px 64px -10px rgba(0, 0, 0, 0.65), 0 10px 28px -4px rgba(46, 107, 71, 0.2), inset 0 1px 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Premium dark footer overrides */
+.dark footer {
+  background: linear-gradient(to bottom, rgba(26, 20, 14, 0.4) 0%, #17120D 50%, #0B0907 100%) !important;
+  border-top-color: rgba(231, 199, 159, 0.08) !important;
+}
+
+/* Maintain dark text color on primary giraffe buttons inside dark mode */
+.dark .btn-giraffe-primary,
+.dark .btn-giraffe-primary span,
+.dark .btn-giraffe-primary svg {
+  color: #2C241B !important;
+}
+
+/* ========================================================== */
+/* DARK MODE STATISTICS & LIGHT PASTEL CARD OVERRIDES */
+/* ========================================================== */
+.dark .bg-emerald-50\/60,
+.dark .bg-emerald-50,
+.dark .bg-emerald-50\/40,
+.dark .bg-emerald-50\/30,
+.dark .bg-emerald-50\/10 {
+  background-color: rgba(26, 20, 14, 0.96) !important;
+  border-color: rgba(16, 185, 129, 0.3) !important;
+  color: #a7f3d0 !important;
+}
+
+.dark .bg-amber-50\/60,
+.dark .bg-amber-50,
+.dark .bg-amber-50\/40,
+.dark .bg-amber-50\/30 {
+  background-color: rgba(26, 20, 14, 0.96) !important;
+  border-color: rgba(245, 158, 11, 0.3) !important;
+  color: #fde68a !important;
+}
+
+.dark .bg-blue-50\/60,
+.dark .bg-blue-50,
+.dark .bg-blue-50\/40,
+.dark .bg-blue-50\/30 {
+  background-color: rgba(26, 20, 14, 0.96) !important;
+  border-color: rgba(59, 130, 246, 0.3) !important;
+  color: #93c5fd !important;
+}
+
+.dark .bg-purple-50\/60,
+.dark .bg-purple-50 {
+  background-color: rgba(26, 20, 14, 0.96) !important;
+  border-color: rgba(168, 85, 247, 0.3) !important;
+  color: #e9d5ff !important;
+}
+
+.dark .bg-teal-50\/60,
+.dark .bg-teal-50 {
+  background-color: rgba(26, 20, 14, 0.96) !important;
+  border-color: rgba(20, 184, 166, 0.3) !important;
+  color: #99f6e4 !important;
+}
+
+.dark .bg-indigo-50\/60,
+.dark .bg-indigo-50 {
+  background-color: rgba(26, 20, 14, 0.96) !important;
+  border-color: rgba(99, 102, 241, 0.3) !important;
+  color: #c7d2fe !important;
+}
+
+.dark .bg-pink-50\/60,
+.dark .bg-pink-50 {
+  background-color: rgba(26, 20, 14, 0.96) !important;
+  border-color: rgba(236, 72, 153, 0.3) !important;
+  color: #fbcfe8 !important;
+}
+
+.dark .bg-rose-50\/60,
+.dark .bg-rose-50 {
+  background-color: rgba(26, 20, 14, 0.96) !important;
+  border-color: rgba(244, 63, 94, 0.3) !important;
+  color: #fecdd3 !important;
+}
+
+.dark .bg-red-50\/60,
+.dark .bg-red-50,
+.dark .bg-red-50\/20,
+.dark .bg-red-50\/10 {
+  background-color: rgba(26, 20, 14, 0.96) !important;
+  border-color: rgba(239, 68, 68, 0.3) !important;
+  color: #fca5a5 !important;
+}
+
+/* Bright contrast colors for Statistics numbers in dark mode */
+.dark .text-brand-green {
+  color: #4ade80 !important;
+}
+
+.dark .text-amber-700 {
+  color: #fde68a !important;
+}
+
+.dark .text-blue-600 {
+  color: #93c5fd !important;
+}
+
+/* COMPASSION BADGE DESIGN SYSTEM (LIGHT & DARK) */
+.badge-lost {
+  background-color: rgba(216, 67, 21, 0.1) !important;
+  color: #D84315 !important;
+  border: 1.5px solid rgba(216, 67, 21, 0.25) !important;
+  border-radius: 9999px !important;
+  padding: 0.25rem 0.75rem !important;
+  font-size: 0.75rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+.badge-found {
+  background-color: rgba(2, 136, 209, 0.1) !important;
+  color: #0288D1 !important;
+  border: 1.5px solid rgba(2, 136, 209, 0.25) !important;
+  border-radius: 9999px !important;
+  padding: 0.25rem 0.75rem !important;
+  font-size: 0.75rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+.badge-adopt {
+  background-color: rgba(46, 107, 71, 0.1) !important;
+  color: #2E6B47 !important;
+  border: 1.5px solid rgba(46, 107, 71, 0.25) !important;
+  border-radius: 9999px !important;
+  padding: 0.25rem 0.75rem !important;
+  font-size: 0.75rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+.badge-foster {
+  background-color: rgba(245, 127, 23, 0.1) !important;
+  color: #F57F17 !important;
+  border: 1.5px solid rgba(245, 127, 23, 0.25) !important;
+  border-radius: 9999px !important;
+  padding: 0.25rem 0.75rem !important;
+  font-size: 0.75rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+}
+
+.dark .badge-lost {
+  background-color: rgba(216, 67, 21, 0.18) !important;
+  color: #ff8a65 !important;
+  border-color: rgba(216, 67, 21, 0.35) !important;
+}
+
+.dark .badge-found {
+  background-color: rgba(2, 136, 209, 0.18) !important;
+  color: #4fc3f7 !important;
+  border-color: rgba(2, 136, 209, 0.35) !important;
+}
+
+.dark .badge-adopt {
+  background-color: rgba(46, 107, 71, 0.18) !important;
+  color: #81c784 !important;
+  border-color: rgba(46, 107, 71, 0.35) !important;
+}
+
+.dark .badge-foster {
+  background-color: rgba(245, 127, 23, 0.18) !important;
+  color: #ffd54f !important;
+  border-color: rgba(245, 127, 23, 0.35) !important;
+}
+
+.dark .glass-input {
+  background: rgba(28, 23, 18, 0.7);
+  border-color: rgba(231, 199, 159, 0.2);
+  color: #FAF5ED;
+}
+
+.dark ::-webkit-scrollbar-track {
+  background: #120F0B;
+  border-left: 1px solid rgba(231, 199, 159, 0.1);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  border: 2px solid #120F0B;
+}
+
+/* ========================================================== */
+/* CUSTOM LIQUID GLASS SCROLLBAR SYSTEM */
+/* ========================================================== */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #FAF5ED;
+  border-left: 1px solid rgba(231, 199, 159, 0.35);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #2E6B47 0%, #F2A93B 100%);
+  border-radius: 9999px;
+  border: 2px solid #FAF5ED;
+  box-shadow: inset 0 0 6px rgba(44, 36, 27, 0.2);
+  transition: all 300ms ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #1E4C31 0%, #E09424 100%);
+  border: 1px solid #FAF5ED;
+}
+
+/* Firefox Scrollbar */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #2E6B47 #FAF5ED;
+}
+
+/* ========================================================== */
+/* CAT PAW CURSOR SYSTEM STYLING */
+/* ========================================================== */
+html.custom-cursor-active,
+html.custom-cursor-active body,
+html.custom-cursor-active a,
+html.custom-cursor-active button,
+html.custom-cursor-active select,
+html.custom-cursor-active label,
+html.custom-cursor-active [role="button"] {
+  cursor: none !important;
+}
+
+/* Preserve text cursor for input fields */
+html.custom-cursor-active input[type="text"],
+html.custom-cursor-active input[type="email"],
+html.custom-cursor-active input[type="search"],
+html.custom-cursor-active textarea {
+  cursor: text !important;
+}
+
+/* Cat Paw Hover & Tap Animations */
+.cat-paw-hover .cat-paw-svg {
+  transform: scale(1.25) rotate(-14deg) !important;
+}
+
+.cat-aura-hover {
+  width: 3.5rem !important;
+  height: 3.5rem !important;
+  background-color: rgba(255, 133, 161, 0.25) !important;
+  border-color: rgba(255, 133, 161, 0.8) !important;
+  box-shadow: 0 10px 28px -4px rgba(255, 133, 161, 0.5) !important;
+}
+
+.cat-paw-tap .cat-paw-svg {
+  transform: scale(0.85) rotate(-5deg) !important;
+}
+
+.cat-aura-tap {
+  transform: scale(0.7) !important;
+}
+
 /* 1. Signature Giraffe Pattern Accent & Texture Utilities */
 .giraffe-pattern-overlay {
   background-image: radial-gradient(rgba(122, 78, 41, 0.28) 22%, transparent 23%),
@@ -92,7 +514,6 @@ body {
   transition: all 300ms cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 0 8px 24px -4px rgba(230, 126, 34, 0.45), inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.7);
   border: 1.5px solid rgba(255, 255, 255, 0.7);
-  cursor: pointer;
 
   &::before {
     content: "";
@@ -129,7 +550,6 @@ body {
   transition: all 300ms cubic-bezier(0.16, 1, 0.3, 1);
   box-shadow: 0 8px 24px -4px rgba(30, 76, 49, 0.45), inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.4);
   border: 1.5px solid rgba(255, 255, 255, 0.4);
-  cursor: pointer;
 
   &:hover {
     transform: translateY(-3px) scale(1.02);

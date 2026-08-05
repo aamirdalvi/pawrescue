@@ -3,13 +3,38 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Search, Menu, X, PlusCircle } from "lucide-react";
+import { Search, Menu, X, PlusCircle, Sun, Moon } from "lucide-react";
 import Button from "@/components/ui/Button";
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
+    const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    if (savedTheme === "dark" || (!savedTheme && systemPrefersDark)) {
+      document.documentElement.classList.add("dark");
+      setTheme("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      setTheme("light");
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    if (theme === "light") {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+      setTheme("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+      setTheme("light");
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -81,6 +106,18 @@ export default function Navbar() {
 
           {/* Right - Giraffe Pattern CTA */}
           <div className="hidden md:flex items-center space-x-3">
+            <button
+              onClick={toggleTheme}
+              className="p-2.5 rounded-2xl text-brand-brown hover:text-grass-green hover:bg-white/70 border border-transparent hover:border-white/70 transition-all duration-200 cursor-pointer"
+              aria-label="Toggle dark mode"
+            >
+              {theme === "light" ? (
+                <Moon className="w-4.5 h-4.5" />
+              ) : (
+                <Sun className="w-4.5 h-4.5" />
+              )}
+            </button>
+
             <Link
               href="/browse"
               className="p-2.5 rounded-2xl text-brand-brown hover:text-grass-green hover:bg-white/70 border border-transparent hover:border-white/70 transition-all duration-200 cursor-pointer"
@@ -102,6 +139,18 @@ export default function Navbar() {
 
           {/* Mobile menu toggle */}
           <div className="flex items-center space-x-2 md:hidden">
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-xl text-brand-brown hover:bg-white/60 transition-colors cursor-pointer"
+              aria-label="Toggle dark mode"
+            >
+              {theme === "light" ? (
+                <Moon className="w-5 h-5" />
+              ) : (
+                <Sun className="w-5 h-5" />
+              )}
+            </button>
+
             <Link
               href="/browse"
               className="p-2 rounded-xl text-brand-brown hover:bg-white/60 transition-colors"

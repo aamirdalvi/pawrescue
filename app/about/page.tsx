@@ -6,7 +6,14 @@ import Footer from "@/components/layout/Footer";
 import Container from "@/components/ui/Container";
 import Breadcrumb from "@/components/ui/Breadcrumb";
 import SectionTitle from "@/components/ui/SectionTitle";
-import { Heart, Shield, Users } from "lucide-react";
+import Button from "@/components/ui/Button";
+import { Heart, Shield, Users, Laptop, GraduationCap } from "lucide-react";
+
+const GithubIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
+    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+  </svg>
+);
 
 export default function AboutPage() {
   const pillars = [
@@ -84,33 +91,66 @@ export default function AboutPage() {
             {/* Volunteers / Core Crew */}
             <div className="space-y-6">
               <SectionTitle
-                title="Our Core Organizers"
-                subtitle="The passionate caretakers orchestrating the local PawRescue program."
+                title="Our Core Organizer"
+                subtitle="The passionate caretaker orchestrating the local PawRescue program."
                 align="center"
               />
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                {[
-                  { name: "Dalmir S.", role: "Founder & Lead Dev" },
-                  { name: "Jane Smith", role: "Volunteer Coord" },
-                  { name: "Robert Ross", role: "Adoption Auditor" },
-                  { name: "Emma Watson", role: "Outreach Liaison" },
-                ].map((member, idx) => (
-                  <div
-                    key={idx}
-                    className="bg-brand-bg/40 border border-brand-cardboard/25 rounded-2xl p-5 text-center hover:bg-white hover:shadow-xs transition-all duration-300"
-                  >
-                    <div className="w-12 h-12 rounded-full bg-brand-cardboard/20 border border-brand-cardboard/35 mx-auto flex items-center justify-center font-extrabold text-brand-brown mb-3">
-                      {member.name.split(" ").map((n) => n[0]).join("")}
-                    </div>
-                    <h4 className="font-extrabold text-brand-brown text-sm">
-                      {member.name}
-                    </h4>
-                    <p className="text-[10px] text-brand-wood font-semibold mt-0.5">
-                      {member.role}
-                    </p>
+              <div className="flex justify-center">
+                <div className="bg-brand-bg/40 border border-brand-cardboard/25 rounded-2xl p-6 text-center hover:bg-white hover:shadow-xs transition-all duration-300 max-w-xs w-full">
+                  <div className="w-14 h-14 rounded-full bg-brand-cardboard/20 border border-brand-cardboard/35 mx-auto flex items-center justify-center font-extrabold text-brand-brown text-lg mb-3">
+                    AD
                   </div>
-                ))}
+                  <h4 className="font-extrabold text-brand-brown text-base">
+                    Aamir Dalvi
+                  </h4>
+                  <p className="text-xs text-brand-wood font-semibold mt-1">
+                    Founder & Lead Dev
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Developer & Project Credits */}
+            <div className="space-y-6 pt-2">
+              <SectionTitle
+                title="Project Credits"
+                subtitle="PawRescue was crafted as an academic full-stack showcase."
+                align="center"
+              />
+
+              <div className="bg-white border border-brand-cardboard/25 rounded-3xl p-6 md:p-8 shadow-glass-md relative overflow-hidden group transition-all duration-300 hover:shadow-glass-lg hover:-translate-y-1">
+                <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-brand-amber/40 via-grass-green/40 to-brand-amber/40" />
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                  <div className="space-y-3">
+                    <span className="text-[10px] font-bold text-grass-green uppercase tracking-widest bg-grass-green/10 border border-grass-green/20 px-3 py-1.5 rounded-full inline-flex items-center gap-1.5">
+                      <Laptop className="w-3.5 h-3.5" /> Project Developer
+                    </span>
+                    <h3 className="text-2xl font-black text-brand-brown tracking-tight">
+                      Designed & Developed by <span className="text-grass-green">Aamir Dalvi</span>
+                    </h3>
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs md:text-sm text-brand-wood font-bold">
+                      <span className="flex items-center gap-1.5">
+                        <GraduationCap className="w-4 h-4 text-brand-amber shrink-0" />
+                        GN Khalsa College of Arts, Science and Commerce
+                      </span>
+                      <span className="hidden sm:inline text-brand-cardboard/50">•</span>
+                      <span>Roll No: <strong>417</strong></span>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3 shrink-0">
+                    <Button
+                      variant="secondary"
+                      href="https://github.com/aamirdalvi"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="shadow-glass-sm hover:shadow-glass-hover"
+                    >
+                      <GithubIcon className="w-4 h-4" />
+                      <span>GitHub Profile</span>
+                    </Button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
