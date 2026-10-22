@@ -88,16 +88,16 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="pt-16 pb-10 mt-auto relative overflow-hidden select-none bg-gradient-to-b from-amber-50/40 via-[#FAF5ED] to-[#F5EDDF] border-t border-brand-cardboard/20">
+    <footer className="pt-12 sm:pt-16 pb-24 sm:pb-16 md:pb-10 mt-auto relative overflow-hidden select-none bg-gradient-to-b from-amber-50/40 via-[#FAF5ED] to-[#F5EDDF] dark:from-[#120E0A] dark:via-[#0B0907] dark:to-[#0B0907] border-t border-brand-cardboard/20 dark:border-white/10">
       <Container className="relative z-10">
 
         {/* ========================================================== */}
         {/* ASYMMETRIC CONTENT AREA WITH VERTICAL DIVIDERS */}
         {/* ========================================================== */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-0 pb-12 border-b border-[#2C241B]/15 relative z-20">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-0 pb-10 sm:pb-12 border-b border-[#2C241B]/15 dark:border-white/10 relative z-20">
           
           {/* LEFT (Large Column - 4 Grid Spans) */}
-          <div className="md:col-span-4 lg:pr-8 lg:border-r lg:border-[#2C241B]/15 flex flex-col space-y-4">
+          <div className="md:col-span-4 lg:pr-8 lg:border-r lg:border-[#2C241B]/15 dark:border-white/10 flex flex-col space-y-4">
             <Link href="/" className="flex items-center space-x-3 group w-max">
               <Image
                 src="/PawRescueLogo.png"
@@ -107,22 +107,22 @@ export default function Footer() {
                 className="w-11 h-11 md:w-12 md:h-12 object-contain group-hover:scale-105 transition-transform duration-300"
               />
               <div>
-                <span className="font-black text-2xl tracking-tight text-[#2C241B] block leading-none">
-                  Paw<span className="text-grass-green">Rescue</span>
+                <span className="font-black text-2xl tracking-tight text-[#2C241B] dark:text-[#FAF5ED] block leading-none">
+                  Paw<span className="text-grass-green dark:text-emerald-400">Rescue</span>
                 </span>
-                <span className="text-[9px] font-black uppercase tracking-widest text-[#5C4E3D] block mt-0.5">
+                <span className="text-[9px] font-black uppercase tracking-widest text-[#5C4E3D] dark:text-[#C2B3A4] block mt-0.5">
                   Rescue • Adopt • Reunite
                 </span>
               </div>
             </Link>
 
-            <p className="text-xs text-[#5C4E3D] leading-relaxed font-bold max-w-sm">
+            <p className="text-xs text-[#5C4E3D] dark:text-[#C2B3A4] leading-relaxed font-bold max-w-sm">
               Connecting rescued, lost and adoptable pets with loving families through a trusted community sanctuary platform.
             </p>
 
             {/* Social Icons */}
             <div className="pt-2">
-              <span className="text-[10px] font-black text-[#5C4E3D] uppercase tracking-wider block mb-2.5">
+              <span className="text-[10px] font-black text-[#5C4E3D] dark:text-[#C2B3A4] uppercase tracking-wider block mb-2.5">
                 Follow Our Sanctuary
               </span>
               <div className="flex flex-wrap items-center gap-2">
@@ -135,7 +135,7 @@ export default function Footer() {
                       target="_blank"
                       rel="noopener noreferrer"
                       aria-label={social.label}
-                      className={`w-9 h-9 rounded-xl glass-pill bg-white/95 border-white shadow-glass-sm flex items-center justify-center text-[#5C4E3D] transition-all duration-300 hover:scale-110 active:scale-95 ${social.color}`}
+                      className={`w-9 h-9 rounded-xl glass-pill bg-white/95 dark:bg-[#16120D] border-white dark:border-white/10 shadow-glass-sm flex items-center justify-center text-[#5C4E3D] dark:text-[#C2B3A4] transition-all duration-300 hover:scale-110 active:scale-95 ${social.color}`}
                     >
                       <IconComponent className="w-4 h-4" />
                     </a>

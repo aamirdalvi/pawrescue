@@ -15,14 +15,14 @@ export default function Breadcrumb() {
   const pathParts = pathname.split("/").filter((part) => part);
 
   return (
-    <div className="bg-gradient-to-b from-amber-100/50 via-amber-50/30 to-transparent border-b border-brand-cardboard/20 pt-28 md:pt-32 pb-3.5 z-20 relative">
+    <div className="bg-gradient-to-b from-amber-100/50 via-amber-50/30 to-transparent dark:from-white/5 dark:via-transparent border-b border-brand-cardboard/20 dark:border-white/10 pt-20 sm:pt-24 md:pt-32 pb-3 z-20 relative">
       <Container>
-        <nav className="flex items-center space-x-2 text-xs font-black text-[#5C4E3D] uppercase tracking-wider select-none">
+        <nav className="flex items-center space-x-2 text-xs font-black text-[#5C4E3D] dark:text-[#C2B3A4] uppercase tracking-wider select-none overflow-x-auto scrollbar-none py-1">
           <Link
             href="/"
-            className="hover:text-grass-green transition-colors flex items-center gap-1.5 shrink-0"
+            className="hover:text-grass-green dark:hover:text-emerald-400 transition-colors flex items-center gap-1.5 shrink-0"
           >
-            <Home className="w-3.5 h-3.5 text-grass-green" />
+            <Home className="w-3.5 h-3.5 text-grass-green dark:text-emerald-400" />
             <span>Home</span>
           </Link>
 
@@ -37,15 +37,15 @@ export default function Breadcrumb() {
 
             return (
               <React.Fragment key={idx}>
-                <ChevronRight className="w-3.5 h-3.5 text-[#5C4E3D]/50 shrink-0" />
+                <ChevronRight className="w-3.5 h-3.5 text-[#5C4E3D]/50 dark:text-[#C2B3A4]/50 shrink-0" />
                 {isLast ? (
-                  <span className="text-[#2C241B] truncate font-black">
+                  <span className="text-[#2C241B] dark:text-[#FAF5ED] truncate font-black">
                     {label}
                   </span>
                 ) : (
                   <Link
                     href={href}
-                    className="hover:text-grass-green transition-colors truncate"
+                    className="hover:text-grass-green dark:hover:text-emerald-400 transition-colors truncate"
                   >
                     {label}
                   </Link>

@@ -63,13 +63,13 @@ export default function Categories() {
           align="center"
         />
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-5 relative z-10">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 md:gap-5 relative z-10">
           {categories.map((cat, idx) => (
             <motion.div
               key={idx}
-              whileHover={{ y: -8, scale: 1.04 }}
-              whileTap={{ scale: 0.98 }}
-              initial={{ opacity: 0, y: 25 }}
+              whileHover={{ y: -6, scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{
@@ -82,15 +82,15 @@ export default function Categories() {
             >
               <Link
                 href={cat.href}
-                className="glass-card flex flex-col items-center text-center p-6 rounded-3xl transition-all duration-300 h-full group border-white/90 shadow-glass-md hover:shadow-glass-hover"
+                className="glass-card flex flex-col items-center text-center p-4 sm:p-6 rounded-2xl sm:rounded-3xl transition-all duration-300 h-full group border-white/90 dark:border-white/10 dark:bg-[#16120D]/90 shadow-glass-md hover:shadow-glass-hover"
               >
-                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${cat.color} border flex items-center justify-center text-3xl mb-4 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300 shadow-glass-sm`}>
+                <div className={`w-12 h-12 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br ${cat.color} border flex items-center justify-center text-2xl sm:text-3xl mb-3 sm:mb-4 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300 shadow-glass-sm`}>
                   {cat.icon}
                 </div>
-                <h3 className="font-black text-brand-brown text-base mb-1 group-hover:text-grass-green transition-colors">
+                <h3 className="font-black text-brand-brown dark:text-[#FAF5ED] text-sm sm:text-base mb-1 group-hover:text-grass-green dark:group-hover:text-emerald-400 transition-colors">
                   {cat.title}
                 </h3>
-                <p className="text-xs text-brand-wood font-bold">
+                <p className="text-[11px] sm:text-xs text-brand-wood dark:text-[#C2B3A4] font-bold">
                   {cat.count}
                 </p>
               </Link>

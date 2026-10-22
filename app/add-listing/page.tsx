@@ -323,15 +323,29 @@ export default function AddListingPage() {
             {/* Main responsive grid layout */}
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start mt-6">
               {/* Left Column: Form & Stepper */}
-              <div className="lg:col-span-8 space-y-6">
+              <div className="lg:col-span-8 space-y-5 sm:space-y-6">
                 
-                {/* Stepper Progress Indicator */}
-                <div className="glass-panel rounded-3xl p-5 shadow-glass-sm border-white">
+                {/* Mobile Compact Progress Bar */}
+                <div className="md:hidden glass-panel bg-white/90 dark:bg-[#16120D]/90 rounded-2xl p-4 shadow-glass-sm border-white/80 dark:border-white/10 space-y-2.5">
+                  <div className="flex items-center justify-between text-xs font-black">
+                    <span className="text-grass-green dark:text-emerald-400">Step {currentStep} of {steps.length}</span>
+                    <span className="text-brand-brown dark:text-[#FAF5ED]">{steps[currentStep - 1]}</span>
+                  </div>
+                  <div className="w-full bg-brand-cardboard/25 dark:bg-white/10 h-2 rounded-full overflow-hidden">
+                    <div
+                      className="bg-gradient-to-r from-grass-green to-emerald-400 h-full transition-all duration-300 rounded-full"
+                      style={{ width: `${(currentStep / steps.length) * 100}%` }}
+                    />
+                  </div>
+                </div>
+
+                {/* Stepper Progress Indicator (Tablet & Desktop) */}
+                <div className="hidden md:block glass-panel bg-white/90 dark:bg-[#16120D]/90 rounded-3xl p-5 shadow-glass-sm border-white/80 dark:border-white/10">
                   <div className="overflow-x-auto scrollbar-none snap-x snap-mandatory py-4 relative">
                     <div className="flex items-center justify-between min-w-[760px] md:min-w-0 w-full relative px-10">
                       
                       {/* Connector line behind steps */}
-                      <div className="absolute left-12 right-12 top-1/2 -translate-y-1/2 h-1 bg-brand-cardboard/25 -z-0" />
+                      <div className="absolute left-12 right-12 top-1/2 -translate-y-1/2 h-1 bg-brand-cardboard/25 dark:bg-white/10 -z-0" />
                       
                       {/* Completed progress fill line */}
                       <div
@@ -363,7 +377,7 @@ export default function AddListingPage() {
                                   ? "bg-grass-green text-white border-grass-green"
                                   : isActive
                                   ? "btn-giraffe-primary scale-110"
-                                  : "bg-white text-[#5C4E3D] border-brand-cardboard/40"
+                                  : "bg-white dark:bg-[#1A140E] text-[#5C4E3D] dark:text-[#C2B3A4] border-brand-cardboard/40 dark:border-white/10"
                               }`}
                             >
                               {isCompleted ? <Check className="w-5 h-5" /> : stepNum}
@@ -371,10 +385,10 @@ export default function AddListingPage() {
                             <span
                               className={`text-[10px] font-black uppercase tracking-wider mt-2 transition-colors ${
                                 isActive
-                                  ? "text-grass-green font-extrabold"
+                                  ? "text-grass-green dark:text-emerald-400 font-extrabold"
                                   : isCompleted
-                                  ? "text-[#2C241B]"
-                                  : "text-[#5C4E3D]/70"
+                                  ? "text-[#2C241B] dark:text-[#FAF5ED]"
+                                  : "text-[#5C4E3D]/70 dark:text-[#C2B3A4]/60"
                               }`}
                             >
                               {label}
@@ -389,17 +403,18 @@ export default function AddListingPage() {
                 {/* Form Step Body Card */}
                 <form
                   onSubmit={handleSubmit(onSubmit)}
-                  className="glass-card rounded-3xl p-6 sm:p-8 shadow-glass-lg border-white/95 space-y-6"
+                  className="glass-card bg-white/95 dark:bg-[#16120D]/95 rounded-2xl sm:rounded-3xl p-5 sm:p-8 shadow-glass-lg border-white/90 dark:border-white/10 space-y-6"
                 >
                   {renderStepContent()}
 
                   {/* Wizard Bottom Nav Buttons */}
-                  <div className="flex items-center justify-between pt-6 border-t border-brand-cardboard/20">
+                  <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-6 border-t border-brand-cardboard/20 dark:border-white/10">
                     <Button
                       type="button"
                       variant="ghost"
                       onClick={handleBack}
                       disabled={currentStep === 1}
+                      className="w-full sm:w-auto"
                     >
                       ← Back
                     </Button>
@@ -409,6 +424,7 @@ export default function AddListingPage() {
                         type="button"
                         variant="primary"
                         onClick={handleNext}
+                        className="w-full sm:w-auto shadow-glass-sm"
                       >
                         Next Step →
                       </Button>
@@ -417,6 +433,7 @@ export default function AddListingPage() {
                         type="submit"
                         variant="primary"
                         loading={isPublishing}
+                        className="w-full sm:w-auto shadow-glass-sm"
                       >
                         🐾 Publish Rescue Listing
                       </Button>

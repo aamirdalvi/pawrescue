@@ -5,6 +5,7 @@ import ToastProvider from "@/components/ui/ToastProvider";
 import CustomCursor from "@/components/ui/CustomCursor";
 import InteractiveParticleField from "@/components/ui/InteractiveParticleField";
 import MobileBottomNav from "@/components/layout/MobileBottomNav";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta-sans",
@@ -42,15 +43,36 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${plusJakartaSans.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans pb-16 md:pb-0">
-        <ToastProvider />
-        <CustomCursor />
-        <InteractiveParticleField />
-        {children}
-        <MobileBottomNav />
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function() {
+              try {
+                var savedTheme = localStorage.getItem('theme');
+                var systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+                  document.documentElement.classList.add('dark');
+                } else {
+                  document.documentElement.classList.remove('dark');
+                }
+              } catch (e) {}
+            })()`,
+          }}
+        />
+      </head>
+      <body className="min-h-full flex flex-col font-sans pb-28 md:pb-0 transition-colors duration-300">
+        <ThemeProvider>
+          <ToastProvider />
+          <CustomCursor />
+          <InteractiveParticleField />
+          {children}
+          <MobileBottomNav />
+        </ThemeProvider>
       </body>
     </html>
   );
 }
+

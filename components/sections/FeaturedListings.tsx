@@ -82,20 +82,20 @@ export default function FeaturedListings() {
           </>
         ) : (
           /* Premium Empty State */
-          <div className="bg-white border-2 border-brand-cardboard/35 rounded-3xl p-10 md:p-14 text-center max-w-xl mx-auto shadow-soft space-y-6">
-            <div className="w-24 h-24 bg-brand-cardboard/15 border border-brand-cardboard/30 rounded-full mx-auto flex items-center justify-center text-4xl shadow-inner animate-bounce duration-[1500ms]">
+          <div className="bg-white dark:bg-[#16120D] border-2 border-brand-cardboard/35 dark:border-white/10 rounded-2xl sm:rounded-3xl p-6 sm:p-10 md:p-14 text-center max-w-xl mx-auto shadow-soft space-y-5 sm:space-y-6">
+            <div className="w-20 h-20 sm:w-24 sm:h-24 bg-brand-cardboard/15 dark:bg-white/5 border border-brand-cardboard/30 dark:border-white/10 rounded-full mx-auto flex items-center justify-center text-3xl sm:text-4xl shadow-inner animate-bounce duration-[1500ms]">
               🔍
             </div>
             <div className="space-y-2">
-              <h3 className="text-xl font-black text-brand-brown">
+              <h3 className="text-lg sm:text-xl font-black text-brand-brown dark:text-[#FAF5ED]">
                 No Listings Yet
               </h3>
-              <p className="text-xs font-bold text-brand-wood/80 leading-relaxed">
+              <p className="text-xs font-bold text-brand-wood/80 dark:text-[#C2B3A4] leading-relaxed max-w-md mx-auto">
                 Be the first in your community to report a lost pet, share a found stray, or make a foster/adoption request.
               </p>
             </div>
             <div className="pt-2">
-              <Button variant="primary" size="lg" href="/listings/add">
+              <Button variant="primary" size="lg" href="/add-listing">
                 ➕ Create First Listing
               </Button>
             </div>
